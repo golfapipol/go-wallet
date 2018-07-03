@@ -1,19 +1,19 @@
 package wallet
 
 type Account struct {
-	Name          string  `json: "name"`
-	Id            string  `json: "id"`
-	Amount        float64 `json: "amount"`
-	TransferLimit float64
+	Name          string  `json:"name"`
+	Id            string  `json:"id"`
+	Amount        float64 `json:"amount"`
+	transferLimit float64
 }
 
 const MAX_PER_TRANACTION = float64(20000)
 const MAX_PER_DAY = float64(100000)
 
 type TransferResult struct {
-	Status   string  `json: "status"`
-	Receiver Account `json: "receiver"`
-	Giver    Account `json: "giver"`
+	Status   string  `json:"status"`
+	Receiver Account `json:"receiver"`
+	Giver    Account `json:"giver"`
 	Fee      float64 `json:"fee"`
 }
 
@@ -33,7 +33,29 @@ func Transfer(giver, receiver Account, transferAmount float64) TransferResult {
 	giver.Amount -= transferAmount
 	receiver.Amount += transferAmount
 	fee := float64(0)
-	giver.TransferLimit += transferAmount
+	giver.transferLimit += transferAmount
 
 	return TransferResult{Status: "Success", Giver: giver, Receiver: receiver, Fee: fee}
+}
+
+func TransferProcess(giverId, receiverId string, transferAmount float64) TransferResult {
+	giver := getAccount(giverId)
+	receiver := getAccount(receiverId)
+	return Transfer(giver, receiver, transferAmount)
+}
+
+func getAccount(id string) Account {
+	users := map[string]Account{
+		"123456789": Account{
+			Name:   "Oat",
+			Id:     "123456789",
+			Amount: float64(12000),
+		},
+		"987654321": Account{
+			Name:   "Nut",
+			Id:     "987654321",
+			Amount: float64(5000),
+		},
+	}
+	return users[id]
 }
