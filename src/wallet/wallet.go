@@ -18,21 +18,24 @@ type TransferResult struct {
 }
 
 func Transfer(giver, receiver Account, transferAmount float64) TransferResult {
-	if giver.Amount < transferAmount {
+	if checkEnoughMoney(giver, transferAmount) {
 		return TransferResult{Status: "Not Enough", Giver: giver, Receiver: receiver}
 	}
 
-	if transferAmount > MAX_PER_TRANACTION {
+	if checkLimitPerTransaction(transferAmount) {
 		return TransferResult{Status: "Maximum Transfer per time is 20,000", Giver: giver, Receiver: receiver}
 	}
 
-	if (transferAmount + transferAmount) > MAX_PER_DAY {
+	if checkLimitPerDay(giver, transferAmount) {
 		return TransferResult{Status: "Maximum Transfer per Day is 100,000", Giver: giver, Receiver: receiver}
 	}
 
+	// TODO: ย้ายเป็น function
 	giver.Amount -= transferAmount
-	receiver.Amount += transferAmount
 	fee := float64(0)
+	// TODO: ย้ายเป็น function
+	receiver.Amount += transferAmount
+	// TODO: ย้ายเป็น function
 	giver.transferLimit += transferAmount
 
 	return TransferResult{Status: "Success", Giver: giver, Receiver: receiver, Fee: fee}
@@ -58,4 +61,16 @@ func getAccount(id string) Account {
 		},
 	}
 	return users[id]
+}
+
+func checkEnoughMoney(acc Account, transferAmount float64) bool {
+	return acc.Amount < transferAmount
+}
+
+func checkLimitPerTransaction(transferAmount) bool {
+	return transferAmount < MAX_PER_TRANACTION
+}
+
+func checkLimitPerDay(acc Account, transferAmount float64) bool {
+	return (acc.Amount + transferAmount) > MAX_PER_DAY
 }
