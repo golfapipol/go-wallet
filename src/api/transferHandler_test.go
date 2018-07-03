@@ -11,8 +11,8 @@ import (
 func Test_TransferHandler_Input_giver_oat_receiver_nut_should_be_success(t *testing.T) {
 	url := "/transfer"
 	requestBody := map[string]interface{}{
-		"reciever": "1",
-		"giver":    "",
+		"receiver": "1oat",
+		"giver":    "2nut",
 		"amount":   1000,
 	}
 	requestBodyString, _ := json.Marshal(requestBody)

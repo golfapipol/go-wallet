@@ -5,10 +5,10 @@ import (
 	"net/http"
 )
 
-type transferRequest struct {
-	Receiver string
-	Giver    string
-	Amount   float64
+type TransferRequest struct {
+	Receiver string  `json:"receiver"`
+	Giver    string  `json:"giver"`
+	Amount   float64 `json:"amount"`
 }
 
 type transferResponse struct {
@@ -16,9 +16,12 @@ type transferResponse struct {
 }
 
 func TransferHandler(w http.ResponseWriter, r *http.Request) {
-	var transferRequest transferRequest
-	json.NewDecoder(r.Body).Decode(&transferRequest)
-
+	transferRequest := TransferRequest{}
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&transferRequest)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
 	transferResponse := transferResponse{}
 	response, _ := json.Marshal(transferResponse)
 	w.Header().Set("Content-Type", "application/json")
