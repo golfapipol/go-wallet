@@ -25,6 +25,6 @@ func Test_TransferHandler_Input_giver_oat_receiver_nut_should_be_success(t *test
 	actual, _ := ioutil.ReadAll(response.Body)
 
 	if expected != string(actual) {
-		t.Errorf("expected %s but it got %s", expected, actual)
+		t.Errorf("expected\n%s but it got\n%s", expected, actual)
 	}
 }

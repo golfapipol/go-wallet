@@ -1,12 +1,5 @@
 package wallet
 
-type Account struct {
-	Name          string  `json:"name"`
-	Id            string  `json:"id"`
-	Amount        float64 `json:"amount"`
-	transferLimit float64
-}
-
 const MAX_PER_TRANACTION = float64(20000)
 const MAX_PER_DAY = float64(100000)
 
@@ -15,6 +8,19 @@ type TransferResult struct {
 	Receiver Account `json:"receiver"`
 	Giver    Account `json:"giver"`
 	Fee      float64 `json:"fee"`
+}
+
+type Account struct {
+	Name          string  `json:"name"`
+	Id            string  `json:"id"`
+	Amount        float64 `json:"amount"`
+	transferLimit float64
+}
+
+func TransferProcess(giverId, receiverId string, transferAmount float64) TransferResult {
+	giver := getAccount(giverId)
+	receiver := getAccount(receiverId)
+	return Transfer(giver, receiver, transferAmount)
 }
 
 func Transfer(giver, receiver Account, transferAmount float64) TransferResult {
@@ -41,12 +47,6 @@ func Transfer(giver, receiver Account, transferAmount float64) TransferResult {
 	return TransferResult{Status: "Success", Giver: giver, Receiver: receiver, Fee: fee}
 }
 
-func TransferProcess(giverId, receiverId string, transferAmount float64) TransferResult {
-	giver := getAccount(giverId)
-	receiver := getAccount(receiverId)
-	return Transfer(giver, receiver, transferAmount)
-}
-
 func getAccount(id string) Account {
 	users := map[string]Account{
 		"123456789": Account{
@@ -67,7 +67,7 @@ func checkEnoughMoney(acc Account, transferAmount float64) bool {
 	return acc.Amount < transferAmount
 }
 
-func checkLimitPerTransaction(transferAmount) bool {
+func checkLimitPerTransaction(transferAmount float64) bool {
 	return transferAmount < MAX_PER_TRANACTION
 }
 

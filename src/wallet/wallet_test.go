@@ -25,12 +25,12 @@ func Test_Transfer_Should_Be_Transfer_Success(t *testing.T) {
 			Name:          "Oat",
 			Id:            "123456789",
 			Amount:        float64(2000),
-			TransferLimit: float64(10000),
+			transferLimit: float64(10000),
 		},
 	}
 	actual := Transfer(giver, receiver, transferMoney)
 
 	if expected != actual {
-		t.Errorf("expected %v but it got %v", expected, actual)
+		t.Errorf("expected\n%v but it got\n%v", expected, actual)
 	}
 }
