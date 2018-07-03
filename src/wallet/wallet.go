@@ -67,8 +67,8 @@ func checkEnoughMoney(acc Account, transferAmount float64) bool {
 	return acc.Amount < transferAmount
 }
 
-func checkLimitPerTransaction(transferAmount) bool {
-	return transferAmount < MAX_PER_TRANACTION
+func checkLimitPerTransaction(transferAmount float64) bool {
+	return transferAmount > MAX_PER_TRANACTION
 }
 
 func checkLimitPerDay(acc Account, transferAmount float64) bool {
