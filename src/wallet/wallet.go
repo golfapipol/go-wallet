@@ -7,6 +7,9 @@ type Account struct {
 	TransferLimit float64
 }
 
+const MAX_PER_TRANACTION = float64(20000)
+const MAX_PER_DAY = float64(100000)
+
 type TransferResult struct {
 	Status   string  `json: "status"`
 	Receiver Account `json: "receiver"`
@@ -14,6 +17,23 @@ type TransferResult struct {
 	Fee      float64 `json:"fee"`
 }
 
-func Transfer(giver, receiver Account, amount float64) TransferResult {
-	return TransferResult{}
+func Transfer(giver, receiver Account, transferAmount float64) TransferResult {
+	if giver.Amount < transferAmount {
+		return TransferResult{Status: "Not Enough", Giver: giver, Receiver: receiver}
+	}
+
+	if transferAmount > MAX_PER_TRANACTION {
+		return TransferResult{Status: "Maximum Transfer per time is 20,000", Giver: giver, Receiver: receiver}
+	}
+
+	if (transferAmount + transferAmount) > MAX_PER_DAY {
+		return TransferResult{Status: "Maximum Transfer per Day is 100,000", Giver: giver, Receiver: receiver}
+	}
+
+	giver.Amount -= transferAmount
+	receiver.Amount += transferAmount
+	fee := float64(0)
+	giver.TransferLimit += transferAmount
+
+	return TransferResult{Status: "Success", Giver: giver, Receiver: receiver, Fee: fee}
 }
