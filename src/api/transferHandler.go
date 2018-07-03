@@ -3,16 +3,13 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"wallet"
 )
 
 type TransferRequest struct {
 	Receiver string  `json:"receiver"`
 	Giver    string  `json:"giver"`
 	Amount   float64 `json:"amount"`
-}
-
-type transferResponse struct {
-	Status string `json:"status"`
 }
 
 func TransferHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +19,7 @@ func TransferHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
-	transferResponse := transferResponse{}
+	transferResponse := wallet.TransferProcess(transferRequest.Giver, transferRequest.Receiver, transferRequest.Amount)
 	response, _ := json.Marshal(transferResponse)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
